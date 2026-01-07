@@ -17,7 +17,7 @@
         packages = with pkgs; [
           libgpiod # Linux GPIO lib
           lgpio # Simplified GPIO lib
-          pigpio # Pi-specific GPIO control
+          # pigpio # Pi-specific GPIO control
           gnumake
           bear
           clang
