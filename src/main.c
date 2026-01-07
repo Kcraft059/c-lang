@@ -1,6 +1,7 @@
-#include <debug.h>
-#include <array.h>
+#include "snake/core.h"
 #include <snake/snake.h>
+#include <array.h>
+#include <debug.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -13,7 +14,7 @@ static Allocator* all = &debugAllc;
 
 int main(int argc, char** argv) {
   board* mainBoard = snBInitBoard(150, 85, all);
-
+/* 
   for (uint64_t i = 0; i < 500; ++i) {
     snBAddTile(mainBoard, (tile){(coords){
                               i / (mainBoard->size_y + 1),
@@ -27,7 +28,15 @@ int main(int argc, char** argv) {
   if (snBRandomPos(mainBoard, exclusions, &co))
     printf("[coord] (%d;%d)\n", co.x, co.y);
 
-  array_delete(exclusions);
+  array_delete(exclusions); */
+
+  snake* mainsnake = snSInitSnake((coords){45,0}, all);
+
+  snBAddSnake(mainBoard, mainsnake);
+  snSSetSize(mainsnake, mainBoard, 30);
+  snSMoveHeadPos(mainsnake, mainBoard, (coords){32,4});
+
+  snSDeleteSnake(mainsnake);
 
   snBDeleteBoard(mainBoard);
   allocStatsPrint();

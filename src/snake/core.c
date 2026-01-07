@@ -8,7 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/_types/_u_int64_t.h>
 #include <time.h>
 
 /// Private functions def
@@ -309,15 +308,59 @@ bool snBDelTile(board* targetBoard, coords pos) {    // Removes tile at coords f
   return false;
 };
 
-void snBAddSnake(board* targetBoard, snake* self); // Adds a snake to the board
+void snBAddSnake(board* targetBoard, snake* self) { // Adds a snake to the board
+  array_append(&targetBoard->snakes, &self);
+
+  for (size_t i = 0; i < array_length(self->coords); i++)
+    hashmap_add(targetBoard->snakeMap, self, self->coords + i);
+
+  snBUAdd(targetBoard, &(update){SNAKE_ALL_UPDT, self, NULL});
+}
 void snBDelSnake(board* targetBoard, snake* self); // Removes the snake at index of the board
 
 // Snake
-snake* snSInitSnake(coords pos, Allocator* allc); // Inits a snake at a given position
-void snSDeleteSnake(snake* self);                 // Free snake from memory
-void snSSetSize(snake* self, int size);           // Sets snake size
-void snSMoveHeadPos(snake* self, coords pos);     // Updates the snake coordinates
-int snSGetSize(snake* self);                      // Get the actual size of the snake
+snake* snSInitSnake(coords pos, Allocator* allc) { // Inits a snake at a given position
+  snake* self = allc->alloc(sizeof(snake));
+
+  if (self) {
+    self->allc = allc;
+    self->coords = array(coords, allc);
+  }
+
+  array_append(&self->coords, &pos);
+
+  return self;
+}
+
+void snSDeleteSnake(snake* self) { // Free snake from memory
+  Allocator* allc = self->allc;
+
+  array_delete(self->coords);
+  allc->free(self);
+}
+
+void snSSetSize(snake* self, board* targetBoard, size_t size) { // Sets snake size
+  long snakeSize = snSGetSize(self);
+  long sizeDelta = size - snakeSize;
+
+  if (sizeDelta < 0) array_resize(&self->coords, size);
+  else if (sizeDelta > 0)
+    for (size_t i = 0; i < sizeDelta; i++)
+      array_append(&self->coords, &self->coords[snakeSize - 1]);
+}
+
+// TODO: Implement update system
+void snSMoveHeadPos(snake* self, board* targetBoard, coords pos) { // Updates the snake coordinates
+  array_add(&self->coords, 0, &pos);
+  snBUAdd(targetBoard, &(update){SNAKE_GO_UPDT, &pos});
+  coords lastPos = self->coords[array_length(self->coords) - 1];
+  array_pop(&self->coords);
+  snBUAdd(targetBoard, &(update){SNAKE_LEAVE_UPDT, &lastPos});
+}
+
+inline size_t snSGetSize(snake* self) { // Get the actual size of the snake
+  return array_length(self->coords);
+}
 
 /// Private helpers
 

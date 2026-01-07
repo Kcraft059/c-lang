@@ -19,8 +19,15 @@
 /// Definitions
 // Update types
 #define BOARD_RESIZE_UPDT (*(uint64_t*)"BRD_RES\0")
+
 #define TILE_STATUS_UPDT (*(uint64_t*)"TIL_STS\0")
 #define TILE_REMOVE_UPDT (*(uint64_t*)"TIL_RMV\0")
+
+#define SNAKE_ADD_UPDT (*(uint64_t*)"SNK_ADD\0")
+#define SNAKE_GO_UPDT (*(uint64_t*)"SNK_GTO\0")
+#define SNAKE_ALL_UPDT (*(uint64_t*)"SNK_ALL\0")
+#define SNAKE_LEAVE_UPDT (*(uint64_t*)"SNK_LEV\0")
+#define SNAKE_REMOVE_UPDT (*(uint64_t*)"SNK_RMV\0")
 
 /// Types
 typedef struct coordinate coords;
@@ -125,10 +132,10 @@ void snBAddSnake(board* targetBoard, snake* self); // Adds a snake to the board
 void snBDelSnake(board* targetBoard, snake* self); // Removes the snake at index of the board
 
 // Snake
-snake* snSInitSnake(coords pos, Allocator* allc);  // Inits a snake at a given position
-void snSDeleteSnake(snake* self);                  // Free snake from memory
-void snSSetSize(snake* self, int size);            // Sets snake size
-void snSMoveHeadPos(snake* self, coords position); // Updates the snake coordinates
-int snSGetSize(snake* self);                       // Get the actual size of the snake
+snake* snSInitSnake(coords pos, Allocator* allc);                      // Inits a snake at a given position
+void snSDeleteSnake(snake* self);                                      // Free snake from memory
+void snSSetSize(snake* self, board* targetBoard, size_t size);         // Sets snake size
+void snSMoveHeadPos(snake* self, board* targetBoard, coords position); // Updates the snake coordinates
+size_t snSGetSize(snake* self);                                        // Get the actual size of the snake
 
 #endif
