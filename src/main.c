@@ -1,57 +1,44 @@
+#include "time.h"
 #include <lgpio.h>
-#include <signal.h>
-#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
-#define GPIO_USER "gpio-ctrl"
+#define GPIOCHIP 0
 
-int gpioSetup(int, const char*);
-void intHandler(int);
-
-int main() {
-  signal(SIGINT, intHandler);
-
-  // Chip + pin setup
-  int gpioChipH = gpioSetup(0, GPIO_USER);
-  lgGpioClaimOutput(gpioChipH, 0, 4, 0);
-
-  int8_t state = 0;
-  while (1) {
-    nanosleep(&(struct timespec){0,500000000}, NULL);
-
-    lgGpioWrite(gpioChipH, 4, state ^= 1);
+int main(int argc, char** argv) {
+  int gpioH;
+  if ((gpioH = lgGpiochipOpen(GPIOCHIP)) < 0) {
+    perror("Can't open device. (You must be priviledged)");
+    goto err_exit;
   }
 
-  lgGpiochipClose(gpioChipH);
-  exit(EXIT_SUCCESS);
+  int rgbPins[3] = {4, 13, 19};
+  lgGroupClaimOutput(gpioH, 0, 3, rgbPins, 0);
+  
+  if (lgTxPwm(gpioH, rgbPins[0], 10000, 10, 0, 0) < 0) {
+    perror("Couldn't start PWM");
+    goto err_free;
+  }
+
+  while (1);
+
+  /* for (int i = 0; i < 100; i++) {
+    if (lgTxPwm(gpioH, rgbPins[0], i * 10, 50, 0, 0) < 0) {
+      perror("Couldn't start PWM");
+      goto err_free;
+    }
+
+    nanosleep(&(struct timespec){0, 50000000}, NULL);
+  } */
+
+  return 0;
+
+// Error handling
+err_free:
+  lgGroupFree(gpioH, rgbPins[0]);
+  lgGpiochipClose(gpioH);
+
+err_exit:
+  return EXIT_FAILURE;
 }
-
-int gpioSetup(int chipDev, const char* user) {
-  int gpioChipH = lgGpiochipOpen(0);
-
-  if (gpioChipH < 0) {
-    perror("Could not open device");
-    goto errh_exit;
-  }
-
-  if (lgGpioSetUser(gpioChipH, GPIO_USER) < 0) {
-    perror("Could not set gpio-user");
-    goto errh_closechip;
-  }
-
-  return gpioChipH;
-
-// Err handling
-errh_closechip:
-  lgGpiochipClose(gpioChipH);
-
-errh_exit:
-  exit(EXIT_FAILURE);
-}
-
-void intHandler(int dummy) {
-  // Can't lgchip close, var need to be in global scope
-  printf("\nInterrupted by user\n");
-  exit(EXIT_FAILURE);
-};

@@ -15,9 +15,9 @@
     {
       devShells."${system}".default = pkgs.mkShell {
         packages = with pkgs; [
-          #gcc
-          libgpiod
-          lgpio
+          libgpiod 	# Linux GPIO lib
+          lgpio		# Simplified GPIO lib
+	  pigpio 	# Pi-specific GPIO control
           gnumake
           bear
           clang
@@ -29,7 +29,9 @@
             Add:
               - -I${pkgs.glibc.dev}/include
               - -I${pkgs.lgpio}/include
-          EOF
+	      - -I${pkgs.pigpio}/include
+
+	  EOF
 
           exec ${pkgs.zsh}/bin/zsh
         '';
