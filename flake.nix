@@ -29,7 +29,6 @@
             Add:
               - -I${pkgs.glibc.dev}/include
               - -I${pkgs.lgpio}/include
-              - -I${pkgs.pigpio}/include
           EOF
 
           exec ${pkgs.zsh}/bin/zsh
