@@ -1,0 +1,14 @@
+[
+  {
+    "arguments": [
+      "/nix/store/48ywmq5vl4jld47z5f1p662vwi0anw6y-gcc-wrapper-14.3.0/bin/gcc",
+      "-c",
+      "-o",
+      "out",
+      "src/main.c"
+    ],
+    "directory": "/home/camille/Desktop/gpio-control",
+    "file": "/home/camille/Desktop/gpio-control/src/main.c",
+    "output": "/home/camille/Desktop/gpio-control/out"
+  }
+]
