@@ -1,4 +1,3 @@
-#include "snake/core.h"
 #include <snake/snake.h>
 #include <array.h>
 #include <debug.h>

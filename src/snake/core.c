@@ -1,4 +1,3 @@
-#include "snake/core.h"
 #include <snake/snake.h> // Reference
 // ----------------------------
 #include <array.h> // Personnal lib
