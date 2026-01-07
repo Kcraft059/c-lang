@@ -1,0 +1,6 @@
+obj
+out
+compile_commands.json
+.vscode
+.clangd
+.cache
