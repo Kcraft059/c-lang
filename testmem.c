@@ -5,11 +5,11 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
-#define IO_BANK0_PHYS 0x400d0000
+#define IO_BANK0_PHYS 0x00000000 // 0x400d0000, on /dev/mem
 #define IO_BANK0_SIZE 0x128
 
 int main() {
-  int fd = open("/dev/mem", O_RDWR | O_SYNC);
+  int fd = open("/dev/gpiomem0", O_RDWR | O_SYNC);
   if (fd < 0) {
     perror("open");
     return 1;
