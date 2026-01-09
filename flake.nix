@@ -1,37 +1,43 @@
 {
+  description = "Linnux kernel module build for rpi5";
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+
+    nixos-raspberrypi = {
+      url = "github:nvmd/nixos-raspberrypi/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
-    { nixpkgs, ... }@inputs:
+    { nixpkgs, nixos-raspberrypi, ... }@inputs:
     let
       system = "aarch64-linux";
 
       pkgs = import nixpkgs {
         inherit system;
+        overlays = [
+          nixos-raspberrypi.overlays.vendor-kernel
+        ];
       };
+
+      kernel = pkgs.linux_rpi5_v6_12_34;
+      linuxPackages = pkgs.linuxPackagesFor kernel;
     in
     {
       devShells."${system}".default = pkgs.mkShell {
-        packages = with pkgs; [
-          libgpiod # Linux GPIO lib
-          lgpio # Simplified GPIO lib
-
+        packages = [
           linuxPackages.kernel.dev
-          # pigpio # Pi-specific GPIO control
-          gnumake
-          bear
-          clang
-        ];
+        ]
+        ++ (with pkgs; [
+        ]);
 
         shellHook = ''
           cat > .clangd <<EOF
           CompileFlags:
             Add:
-              - -I${pkgs.glibc.dev}/include
-              - -I${pkgs.lgpio}/include
-              - -I${pkgs.linuxPackages.kernel.dev}/lib/modules/6.12.63/source/include
+              - -I${linuxPackages.kernel.dev}/lib/modules/6.12.63/source/include
           EOF
 
           exec ${pkgs.zsh}/bin/zsh
