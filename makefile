@@ -6,11 +6,11 @@ OUTDIR := ./out
 
 # Compiler & flags
 CC 		 := clang
-CFLAGS := -Wall
+CFLAGS := -Wall -I$(HDRDIR)
 LIBS   := -llgpio
 
 # Targets
-DEPS 	 := $(shell find $(SRCDIR) -type f -name '*.h')
+DEPS 	 := $(shell find $(HDRDIR) -type f -name '*.h')
 SRC  	 := $(shell find $(SRCDIR) -type f -name '*.c')
 OBJ  	 := $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRC))
 
