@@ -33,13 +33,22 @@
         ++ (with pkgs; [
         ]);
 
-        shellHook = ''
+        shellHook = let
+          libModulePath = "${linuxPackages.kernel.dev}/lib/modules/${linuxPackages.kernel.modDirVersion}";
+          in
+          ''
           cat > .clangd <<EOF
           CompileFlags:
             Add:
-              - -I${linuxPackages.kernel.dev}/lib/modules/6.12.63/source/include
+              - -I${libModulePath}/source/include
+          Diagnostics:
+            Suppress:
+              - '*'
           EOF
 
+          sed -i '\%#MODCOMP%{n;s%.*%	make -C ${libModulePath}/build M=$(PWD) modules%}' ./Makefile
+          sed -i '\%#MODCLEAN%{n;s%.*%	make -C ${libModulePath}/build M=$(PWD) clean%}' ./Makefile
+          
           exec ${pkgs.zsh}/bin/zsh
         '';
       };

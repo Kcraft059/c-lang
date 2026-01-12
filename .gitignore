@@ -3,4 +3,9 @@ out
 compile_commands.json
 .vscode
 .clangd
+.clang-format
 .cache
+*.o*
+*.ko*
+*.mod*
+*.symvers*
