@@ -1,7 +1,7 @@
 #include <linux/fs.h>
 #include <linux/kernel.h>
 #include <linux/module.h>
-#include "include/test.h"
+#include <rpireg.h>
 
 // See https://elixir.bootlin.com/linux for source code
 

@@ -46,8 +46,7 @@
               - '*'
           EOF
 
-          sed -i '\%#MODCOMP%{n;s%.*%	make -C ${libModulePath}/build M=$(PWD) modules%}' ./Makefile
-          sed -i '\%#MODCLEAN%{n;s%.*%	make -C ${libModulePath}/build M=$(PWD) clean%}' ./Makefile
+          sed -i '\%#MODCOMPPATH%{n;s%.*%COMPPATH = ${libModulePath}/build%}' ./Makefile
           
           exec ${pkgs.zsh}/bin/zsh
         '';
