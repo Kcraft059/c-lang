@@ -5,12 +5,10 @@
  * Main module import for rpireg
  */
 
-//#include
-
-// Constant defs
+// Macros
 #define MOD_NAME "rpireg"
 
-// Function declaration
-void myPrintTest(char *);
+// Declaration
+extern int majorDev;
 
 #endif
