@@ -5,12 +5,18 @@
 
 // See https://elixir.bootlin.com/linux for source code
 
-/*---- Meta ----*/
-
+/* ---- Meta ---- */
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Camille Therey");
 MODULE_DESCRIPTION("RPI register interaction module");
 MODULE_VERSION("0.01");
+/* ---- END Meta ---- */
+
+/// Declarations
+
+
+
+/// Func definition
 
 static int __init mod_init(void) {
   pr_info(MOD_NAME ": Loaded.\n");
