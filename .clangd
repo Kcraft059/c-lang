@@ -1,5 +1,6 @@
 CompileFlags:
   Add:
+    - -I/home/camille/Desktop/c-lang/src/include
     - -I/nix/store/kyg2zanannj4xvv042b0220js8pw0af7-linux_rpi-bcm2712-6.12.34-stable_20250702-dev/lib/modules/6.12.34/source/include
 Diagnostics:
   Suppress:
