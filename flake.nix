@@ -31,6 +31,8 @@
           linuxPackages.kernel.dev
         ]
         ++ (with pkgs; [
+          gnumake
+          clang
         ]);
 
         shellHook = let
@@ -40,6 +42,7 @@
           cat > .clangd <<EOF
           CompileFlags:
             Add:
+              - -I$(pwd)/src/include
               - -I${libModulePath}/source/include
           Diagnostics:
             Suppress:
